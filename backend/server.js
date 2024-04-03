@@ -42,7 +42,7 @@ const auth = async (req, res, next) => {
     }
 }
 
-const allCompaniesResponses = [];
+let allCompaniesResponses = [];
 
 // api to retrive top n products
 app.get('/categories/:categoryname/products', auth, async (req, res) => {
