@@ -10,6 +10,7 @@ app.use(express.json());
 
 const PORT = 3001;
 const BASE_URL = process.env.API_URL;
+const companies = ["AMZ", "FLP", "SNP", "MYN", "AZO"];
 
 app.set('port', PORT);
 
@@ -40,5 +41,31 @@ const auth = async (req, res, next) => {
         res.status(500).send(err);
     }
 }
+
+// api to retrive top n products
+app.get('/categories/:categoryname/products', auth, async (req, res) => {
+    try {
+        const category = req.params.categoryname;
+        const top = req.query.top;
+        const minPrice = req.query.minPrice;
+        const maxPrice = req.query.maxPrice;
+
+        const allCompaniesResponses = [];
+
+        for (const company of companies) {
+            const response = await axios.get(`${BASE_URL}/test/companies/${company}/categories/${category}/products?top=${top}&minPrice=${minPrice}&maxPrice=${maxPrice}`, {
+                headers: {
+                    'Authorization': `Bearer ${req.accessToken}`
+                }
+            });
+            allCompaniesResponses.push(response.data);
+        };
+        res.status(200).send(allCompaniesResponses);
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
 
 app.listen(PORT);
