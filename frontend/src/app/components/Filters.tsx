@@ -6,7 +6,7 @@ function Filters({ categories, handleSelectCategory, handleFiltersChange }: any)
                 className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-400 mb-4"
                 onChange={(e) => handleSelectCategory(e.target.value)}
             >
-                <option value="">All Categories</option>
+                <option value="">Select Availability</option>
                 {categories.map((category: any) => (
                     <option key={category.id} value={category.name}>
                         {category.name}
@@ -14,11 +14,12 @@ function Filters({ categories, handleSelectCategory, handleFiltersChange }: any)
                 ))}
             </select>
             <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Top</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Products to display</label>
                 <input
                     type="number"
                     className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-400"
                     onChange={(e) => handleFiltersChange('top', e.target.value)}
+                    placeholder="1-100"
                 />
             </div>
             <div className="mb-4">
@@ -27,6 +28,7 @@ function Filters({ categories, handleSelectCategory, handleFiltersChange }: any)
                     type="number"
                     className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-400"
                     onChange={(e) => handleFiltersChange('minPrice', e.target.value)}
+                    placeholder="1-10000"
                 />
             </div>
             <div className="mb-4">
@@ -35,6 +37,7 @@ function Filters({ categories, handleSelectCategory, handleFiltersChange }: any)
                     type="number"
                     className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-400"
                     onChange={(e) => handleFiltersChange('maxPrice', e.target.value)}
+                    placeholder="1-10000"
                 />
             </div>
         </div>
