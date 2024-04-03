@@ -37,7 +37,7 @@ const auth = async (req, res, next) => {
             });
         }
     } catch (err) {
-        console.log(err);
+        console.log("Error in Auth: ", err);
         res.status(500).send(err);
     }
 }
@@ -59,6 +59,7 @@ app.get('/categories/:categoryname/products', auth, async (req, res) => {
             return;
         }
 
+        allCompaniesResponses = [];
         for (const company of companies) {
             const response = await axios.get(`${BASE_URL}/test/companies/${company}/categories/${category}/products?top=${top}&minPrice=${minPrice}&maxPrice=${maxPrice}`, {
                 headers: {
@@ -68,8 +69,44 @@ app.get('/categories/:categoryname/products', auth, async (req, res) => {
             allCompaniesResponses.push({ company: company, data: response.data });
         };
         res.status(200).send(allCompaniesResponses);
-        allCompaniesResponses = [];
 
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+// api to retrive details of a product
+app.get('/categories/:categoryname/products/:productid', auth, async (req, res) => {
+    try {
+        const productId = req.params.productid;
+        const category = req.params.categoryname;
+        const company = req.query.companyName;
+        const n = req.query.top;
+        const minPrice = req.query.minPrice;
+        const maxPrice = req.query.maxPrice;
+
+        if (!company || !productId || !category || !n || !minPrice || !maxPrice) {
+            res.status(400).send({
+                message: "Required Parameters Missing"
+            });
+            return;
+        }
+
+        const filteredData = allCompaniesResponses.filter(
+            item => item.data.name === productId || "" &&
+                item.company.name === company || "" &&
+                item.data.category === category || "" &&
+                item.data.price >= minPrice && item.data.price <= maxPrice
+        );
+        if (filteredData.length > 0) {
+            res.status(200).send(filteredData);
+        }
+        else {
+            res.status(404).send({
+                message: "Product Not Found"
+            });
+        }
     } catch (err) {
         console.log(err);
         res.status(500).send(err);
