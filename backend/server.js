@@ -42,6 +42,8 @@ const auth = async (req, res, next) => {
     }
 }
 
+const allCompaniesResponses = [];
+
 // api to retrive top n products
 app.get('/categories/:categoryname/products', auth, async (req, res) => {
     try {
@@ -57,17 +59,16 @@ app.get('/categories/:categoryname/products', auth, async (req, res) => {
             return;
         }
 
-        const allCompaniesResponses = [];
-
         for (const company of companies) {
             const response = await axios.get(`${BASE_URL}/test/companies/${company}/categories/${category}/products?top=${top}&minPrice=${minPrice}&maxPrice=${maxPrice}`, {
                 headers: {
                     'Authorization': `Bearer ${req.accessToken}`
                 }
             });
-            allCompaniesResponses.push(response.data);
+            allCompaniesResponses.push({ company: company, data: response.data });
         };
         res.status(200).send(allCompaniesResponses);
+        allCompaniesResponses = [];
 
     } catch (err) {
         console.log(err);
