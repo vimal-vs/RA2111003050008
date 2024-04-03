@@ -50,6 +50,13 @@ app.get('/categories/:categoryname/products', auth, async (req, res) => {
         const minPrice = req.query.minPrice;
         const maxPrice = req.query.maxPrice;
 
+        if (!category || !top || !minPrice || !maxPrice) {
+            res.status(400).send({
+                message: "Required Parameters Missing"
+            });
+            return;
+        }
+
         const allCompaniesResponses = [];
 
         for (const company of companies) {
